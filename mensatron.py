@@ -7,7 +7,7 @@
 
 def get_api():
 	# Only setup for twitter if necessary
-	from secrets import *
+	from secrets import (C_KEY, C_SECRET, A_TOKEN, A_TOKEN_SECRET)
 	import tweepy
 
 	auth = tweepy.OAuthHandler(C_KEY, C_SECRET)
