@@ -12,8 +12,9 @@ if DEBUG:
 	from sys import exit
 
 import logging
-from logging import (info, debug)
+from logging import (critical, error, warning, info, debug)
 
+import re
 from datetime import datetime
 from random import (random, randrange, gauss)
 from time import sleep
@@ -37,7 +38,26 @@ def get_api():
 	return api
 
 
-def tweet(api):
+def load_sequence_id(api=None):
+	# Extract the most recent sequence ID and increment by one
+	if not api:
+		return 0
+
+	latest_tweet_text = api.GetUserTimeline(screen_name='mensatron',
+		count=1, include_rts=False, exclude_replies=True,
+		trim_user=True)[0].text
+	p = re.compile(r'(\d)+: .*')
+	m = p.match(latest_tweet_text)
+	if m:
+		sequence_id = int(m.group(1))
+		info('Got sequence ID: {}'.format(sequence_id))
+	else:
+		critical('Failed to load sequence ID, exiting...')
+		exit(1)
+	return sequence_id + 1
+
+
+def tweet(sequence_id, api=None):
 	tweet_list = ( # (<cumulative weight>, <tweet text>)
 		(6, "Ciao, dimmi."),
 		(14, "Dimmi."),
@@ -48,13 +68,15 @@ def tweet(api):
 	debug('Tweet selection index: {}'.format(index))
 	for i in tweet_list:
 		if index < i[0]:
+			tweet_text = '{}: {}'.format(sequence_id, i[1])
+			sequence_id += 1
 			if api:
-				api.PostUpdate(i[1])
-				info('Tweeted "{}"'.format(i[1]))
+				api.PostUpdate(tweet_text)
+				info('Tweeted "{}"'.format(tweet_text))
 			else: # DRY_RUN
-				print(i[1])
-				info('Simulated tweet: "{}"'.format(i[1]))
-			return
+				print(tweet_text)
+				info('Simulated tweet: "{}"'.format(tweet_text))
+			return sequence_id
 
 
 def tweet_burst():
@@ -67,6 +89,10 @@ def tweet_burst():
 
 	if not DRY_RUN:
 		api = get_api()
+	else:
+		api = None
+
+	sequence_id = load_sequence_id(api)
 
 	init_hour = datetime.now().hour
 	debug('Init hour set: {}'.format(init_hour))
@@ -86,10 +112,7 @@ def tweet_burst():
 		else:
 			info('Skipping {}-minute sleep...'.format(sleep_minutes))
 
-		if not DRY_RUN:
-			tweet(api)
-		else:
-			tweet(None)
+		sequence_id = tweet(sequence_id, api)
 
 		target_minute += max(int(gauss(
 			tweet_spacing_mu, tweet_spacing_sigma)), 1)
