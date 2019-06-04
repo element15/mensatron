@@ -79,17 +79,22 @@ def tweet_burst():
 		debug('Entered burst loop')
 
 		sleep_minutes = target_minute - datetime.now().minute
-		info('Sleeping for {} minutes...'.format(sleep_minutes))
-		sleep(sleep_minutes * 60)
-		info('Resuming from sleep...')
+		if not DRY_RUN:
+			info('Sleeping for {} minutes...'.format(sleep_minutes))
+			sleep(sleep_minutes * 60)
+			info('Resuming from sleep...')
+		else:
+			info('Skipping {}-minute sleep...'.format(sleep_minutes))
 
 		if not DRY_RUN:
 			tweet(api)
 		else:
 			tweet(None)
+
 		target_minute += max(int(gauss(
 			tweet_spacing_mu, tweet_spacing_sigma)), 0)
 		debug('New target minute: {}'.format(target_minute))
+
 	info('Tweet burst finished')
 
 
