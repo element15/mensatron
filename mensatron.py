@@ -66,8 +66,8 @@ def tweet_burst():
 		debug('Entered burst loop')
 
 		sleep_minutes = target_minute - datetime.now().minute
-		info('Sleeping for {} minutes...'.format(minutes))
-		sleep(minutes * 60)
+		info('Sleeping for {} minutes...'.format(sleep_minutes))
+		sleep(sleep_minutes * 60)
 		info('Resuming from sleep...')
 
 		tweet(api)
