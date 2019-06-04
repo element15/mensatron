@@ -8,14 +8,12 @@
 DEBUG = False
 DRY_RUN = False # Post to stdout instead of Twitter
 
-if DEBUG:
-	from sys import exit
 
 import logging
-
 import re
 from datetime import datetime
 from random import (random, randrange, gauss)
+from sys import exit
 from time import sleep
 
 
@@ -135,4 +133,8 @@ def main():
 		if DEBUG: # Nonzero exit codes used for testing with shell scripts
 			exit(41)
 
-main()
+try:
+	main()
+except Exception as e:
+	logging.exception("Caught Exception %s", e)
+	exit(1)
