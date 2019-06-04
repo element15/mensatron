@@ -92,7 +92,7 @@ def tweet_burst():
 			tweet(None)
 
 		target_minute += max(int(gauss(
-			tweet_spacing_mu, tweet_spacing_sigma)), 0)
+			tweet_spacing_mu, tweet_spacing_sigma)), 1)
 		debug('New target minute: {}'.format(target_minute))
 
 	info('Tweet burst finished')
