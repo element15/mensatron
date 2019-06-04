@@ -3,7 +3,7 @@
 # The one and only @mensatron. This script is intended to be invoked as a `cron`
 # job once an hour, more or less on the hour.
 # Written by Christian Moomaw
-# Last revised 2019-06-01
+# Last revised 2019-06-04
 
 DEBUG = False
 DRY_RUN = False # Post to stdout instead of Twitter
