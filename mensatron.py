@@ -5,6 +5,10 @@
 # Written by Christian Moomaw
 # Last revised 2019-06-01
 
+from datetime import datetime
+from random import (random, randrange, gauss)
+from time import sleep
+
 def get_api():
 	# Only setup for twitter if necessary
 	from secrets import (C_KEY, C_SECRET, A_TOKEN, A_TOKEN_SECRET)
@@ -34,10 +38,6 @@ def tweet_burst():
 	tweet_spacing_sigma = 10
 	max_burst_length = 30
 
-	from datetime import datetime
-	from random import (randrange, gauss)
-	from time import sleep
-
 	api = get_api()
 	init_hour = datetime.now().hour
 	target_minute_init = randrange(60)
@@ -49,7 +49,6 @@ def tweet_burst():
 		target_minute += max(int(gauss(
 			tweet_spacing_mu, tweet_spacing_sigma)), 0)
 
-from random import random
 hourly_chance = 0.02
 if random() < hourly_chance:
 	tweet_burst()
