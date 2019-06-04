@@ -6,6 +6,7 @@
 # Last revised 2019-06-01
 
 DEBUG = False
+DRY_RUN = False # Post to stdout instead of Twitter
 
 import logging
 from logging import (info, debug)
@@ -41,8 +42,12 @@ def tweet(api):
 	debug('Tweet selection index: {}'.format(index))
 	for i in tweet_list:
 		if index < i[0]:
-			api.PostUpdate(i[1])
-			info('Tweeted "{}"'.format(i[1]))
+			if api:
+				api.PostUpdate(i[1])
+				info('Tweeted "{}"'.format(i[1]))
+			else: # DRY_RUN
+				print(i[1])
+				info('Simulated tweet: "{}"'.format(i[1]))
 			return
 
 def tweet_burst():
@@ -53,7 +58,8 @@ def tweet_burst():
 	tweet_spacing_sigma = 10
 	max_burst_length = 30
 
-	api = get_api()
+	if not DRY_RUN:
+		api = get_api()
 	init_hour = datetime.now().hour
 	debug('Init hour set: {}'.format(init_hour))
 	target_minute_init = randrange(datetime.now().minute, 60)
@@ -68,14 +74,20 @@ def tweet_burst():
 		sleep(sleep_minutes * 60)
 		info('Resuming from sleep...')
 
-		tweet(api)
+		if not DRY_RUN:
+			tweet(api)
+		else:
+			tweet(None)
 		target_minute += max(int(gauss(
 			tweet_spacing_mu, tweet_spacing_sigma)), 0)
 		debug('New target minute: {}'.format(target_minute))
 	info('Tweet burst finished')
 
+
 hourly_chance = 0.02
 info('New mensatron invoked')
+if DRY_RUN:
+	info('Running in dry run mode')
 if random() < hourly_chance:
 	tweet_burst()
 else:
