@@ -24,11 +24,9 @@ def get_api():
 	# Only setup for twitter if necessary
 	info('Initialising Twitter API...')
 	from secrets import (C_KEY, C_SECRET, A_TOKEN, A_TOKEN_SECRET)
-	import tweepy
-
-	auth = tweepy.OAuthHandler(C_KEY, C_SECRET)
-	auth.set_access_token(A_TOKEN, A_TOKEN_SECRET)
-	api = tweepy.API(auth)
+	import twitter
+	api = twitter.Api(consumer_key=C_KEY, consumer_secret=C_SECRET,
+		access_token_key=A_TOKEN, access_token_secret=A_TOKEN_SECRET)
 	info('API initialised')
 	return api
 
@@ -43,7 +41,7 @@ def tweet(api):
 	debug('Tweet selection index: {}'.format(index))
 	for i in tweet_list:
 		if index < i[0]:
-			api.update_status(i[1])
+			api.PostUpdate(i[1])
 			info('Tweeted "{}"'.format(i[1]))
 			return
 
