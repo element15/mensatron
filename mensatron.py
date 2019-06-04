@@ -20,6 +20,7 @@ def tweet(api):
 		(6, "Ciao, dimmi."),
 		(14, "Dimmi."),
 		(16, "Buon appetito."),
+		(24, "Poi?"),
 	)
 	index = randrange(tweet_list[-1][0])
 	for i in tweet_list:
