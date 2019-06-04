@@ -98,16 +98,19 @@ def tweet_burst():
 	info('Tweet burst finished')
 
 
-hourly_chance = 0.02
-info('New mensatron invoked')
-if DRY_RUN:
-	info('Running in dry run mode')
+def main():
+	hourly_chance = 0.02
+	info('New mensatron invoked')
+	if DRY_RUN:
+		info('Running in dry run mode')
 
-if random() < hourly_chance:
-	tweet_burst()
-	if DEBUG: # Nonzero exit codes used for testing with shell scripts
-		exit(40)
-else:
-	info('No tweet burst triggered')
-	if DEBUG: # Nonzero exit codes used for testing with shell scripts
-		exit(41)
+	if random() < hourly_chance:
+		tweet_burst()
+		if DEBUG: # Nonzero exit codes used for testing with shell scripts
+			exit(40)
+	else:
+		info('No tweet burst triggered')
+		if DEBUG: # Nonzero exit codes used for testing with shell scripts
+			exit(41)
+
+main()
