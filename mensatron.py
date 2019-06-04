@@ -40,7 +40,7 @@ def tweet_burst():
 
 	api = get_api()
 	init_hour = datetime.now().hour
-	target_minute_init = randrange(60)
+	target_minute_init = randrange(datetime.now().minute, 60)
 	target_minute = target_minute_init
 	while (datetime.now().hour == init_hour and target_minute < 60
 		and (target_minute - target_minute_init) < max_burst_length):
