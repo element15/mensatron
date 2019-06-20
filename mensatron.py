@@ -3,7 +3,7 @@
 # The one and only @mensatron. This script is intended to be invoked as a `cron`
 # job once an hour, more or less on the hour.
 # Written by Christian Moomaw
-# Last revised 2019-06-04
+# Last revised 2019-06-20
 
 DEBUG = False
 DRY_RUN = False # Post to stdout instead of Twitter
@@ -43,7 +43,7 @@ def load_sequence_id(api=None):
 	latest_tweet_text = api.GetUserTimeline(screen_name='mensatron',
 		count=1, include_rts=False, exclude_replies=True,
 		trim_user=True)[0].text
-	p = re.compile(r'(\d)+: .*')
+	p = re.compile(r'(\d+): .*')
 	m = p.match(latest_tweet_text)
 	if m:
 		sequence_id = int(m.group(1))
